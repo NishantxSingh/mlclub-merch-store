@@ -5,7 +5,6 @@
   
   let { product } = $props();
   
-  // THE FIX: We pull the whole store, then read the cart reactively using $derived
   const store = getContext('cartStore');
   let cart = $derived(store.cart);
 
@@ -49,16 +48,16 @@
   let itemSize = $derived(product?.category === 'apparel' ? size : null);
   let itemColor = $derived(product?.category === 'apparel' ? color : null);
   
-  // Now this correctly updates whenever the cart changes!
+
   let isItemInCart = $derived(cart.some(i => i.id === product.id && i.size === itemSize && i.color === itemColor));
   let avgRating = $derived((reviews.reduce((acc, rev) => acc + rev.rating, 0) / reviews.length).toFixed(1));
 
   function handleToggleCart() {
     if (isItemInCart) {
-      // Remove from cart
+
       store.cart = store.cart.filter(i => !(i.id === product.id && i.size === itemSize && i.color === itemColor));
     } else {
-      // Add to cart
+
       store.addToCart(product, itemSize, itemColor);
       added = true;
       setTimeout(() => added = false, 2000);

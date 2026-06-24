@@ -8,7 +8,6 @@
 
   let mousePos = $state({ x: 0, y: 0 });
   
-  // Reactively track the product ID from the URL search params (?id=1)
   let selectedId = $derived($page.url.searchParams.get('id'));
   let displayProduct = $derived(PRODUCTS.find(p => p.id === selectedId) || null);
   let isVisible = $derived(!!displayProduct);

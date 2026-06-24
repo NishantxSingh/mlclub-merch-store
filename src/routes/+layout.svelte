@@ -2,16 +2,13 @@
   import '../app.css';
   import Navbar from '$lib/components/Navbar.svelte';
   import DisclaimerModal from '$lib/components/DisclaimerModal.svelte';
-  
-  // THE FIX: Moved setContext import to the top level!
   import { setContext } from 'svelte';
 
   let { children } = $props();
 
-  // Reactive Global Cart State
   let cart = $state([]);
 
-  // Global helper function to add items to the cart
+
   function addToCart(product, selectedSize, selectedColor) {
     const existingIndex = cart.findIndex(
       (item) => item.id === product.id && item.size === selectedSize && item.color === selectedColor
@@ -29,8 +26,7 @@
     }
   }
 
-  // Provide cart state and actions to child pages natively
-  // This must also run at the top level of the script block!
+  
   setContext('cartStore', {
     get cart() { return cart; },
     set cart(val) { cart = val; },

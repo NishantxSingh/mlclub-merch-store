@@ -8,7 +8,6 @@
   let priceDisplay = $state(hiddenPrice);
   let interval;
 
-  // Reacts whenever isHovered changes (Two-way scramble!)
   $effect(() => {
     let step = 0;
     let targetPrice = isHovered ? realPrice : hiddenPrice;

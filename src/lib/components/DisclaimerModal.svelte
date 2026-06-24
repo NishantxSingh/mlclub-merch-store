@@ -3,7 +3,6 @@
   
   let isOpen = $state(false);
 
-  // Trigger modal display slightly after mount for a smooth transition
   $effect(() => {
     const timer = setTimeout(() => isOpen = true, 500);
     return () => clearTimeout(timer);

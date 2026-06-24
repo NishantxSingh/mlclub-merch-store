@@ -1,5 +1,5 @@
 <script>
-  import { ShoppingCart, User, ShoppingBag } from '@lucide/svelte';
+  import { ShoppingCart, User } from '@lucide/svelte';
   
   // This is how Svelte accepts 'props' (like your cart array)
   let { cart = [] } = $props();
@@ -16,7 +16,6 @@
           >
                Merchandise
            </span>
-           <ShoppingBag class="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-white/80" stroke-width={1.5} />
         </div>
     </div>
 

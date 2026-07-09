@@ -196,10 +196,18 @@
             </span>
           </div>
         </div>
+        <div class="flex items-center gap-6">
+          <a href="https://www.linkedin.com/company/machine-learning-club-nits/" target="_blank" rel="noreferrer" class="hover:scale-110 transition-transform">
+            <img src="/linkedin.png" alt="LinkedIn" class="w-8 h-8 object-contain grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all" />
+          </a>
+          <a href="https://www.instagram.com/mlclub_nits/" target="_blank" rel="noreferrer" class="hover:scale-110 transition-transform">
+            <img src="/instragram.png" alt="Instagram" class="w-8 h-8 object-contain grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all" />
+          </a>
+        </div>
       </div>
       
-      <div class="text-center">
-        <p class="text-gray-400 text-xs sm:text-sm">
+      <div class="flex justify-center">
+        <p class="text-center text-gray-400 text-xs sm:text-sm max-w-3xl">
           Copyright © 2025 - All rights reserved by <span class="text-[#ff6b00] font-semibold">Machine Learning Club, NIT Silchar</span>
         </p>
       </div>

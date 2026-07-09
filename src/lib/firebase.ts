@@ -1,10 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { browser } from '$app/environment';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -21,20 +19,15 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize analytics only in the browser (avoid SSR "window is not defined")
-let analytics: any = undefined;
-if (typeof window !== 'undefined') {
-  try {
+let analytics: any = null;
+if (browser) {
+  import('firebase/analytics').then(({ getAnalytics }) => {
     analytics = getAnalytics(app);
-  } catch (err) {
-    // Analytics may be unsupported (e.g., during SSR or in test envs)
-    // keep it non-fatal and continue without analytics
-    // eslint-disable-next-line no-console
-    console.warn('Firebase analytics not initialized:', err?.message || err);
-  }
+  }).catch((err) => {
+    console.warn('Firebase analytics not loaded:', err);
+  });
 }
 
 // Services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export { analytics };

@@ -34,6 +34,13 @@
     cover: ''
   });
 
+  let mousePos = $state({ x: 0, y: 0 });
+
+  function handleMouseMove(e: MouseEvent) {
+    mousePos.x = (e.clientX / window.innerWidth - 0.5) * 2;
+    mousePos.y = (e.clientY / window.innerHeight - 0.5) * 2;
+  }
+
   onMount(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       currentUser = user;
@@ -181,7 +188,13 @@
   }
 </script>
 
-<div class="min-h-screen bg-black text-gray-100 font-sans pt-24 pb-12 px-4 sm:px-6 relative selection:bg-[#ff6b00] selection:text-black z-10">
+<div class="w-full min-h-screen relative" onmousemove={handleMouseMove} role="presentation">
+  <div class="fixed inset-0 z-0 overflow-hidden bg-black pointer-events-none">
+  <div class="absolute inset-0 bg-cover bg-center transition-transform duration-300 ease-out opacity-70" style="background-image: url('/bg.jpeg'); transform: scale(1.1) translate({mousePos.x * -20}px, {mousePos.y * -20}px);"></div>
+    <div class="absolute inset-0 bg-black/60"></div>
+  </div>
+
+<div class="min-h-screen text-gray-100 font-sans pt-24 pb-12 px-4 sm:px-6 relative z-10 selection:bg-[#ff6b00] selection:text-black">
   
   {#if loading}
     <div class="flex items-center justify-center h-[60vh]">
@@ -277,10 +290,13 @@
   {:else}
     <div class="max-w-4xl mx-auto space-y-8">
       <div class="relative rounded-3xl overflow-hidden bg-gray-900 border border-gray-800">
-        <div class="h-48 sm:h-64 bg-linear-to-r from-gray-800 to-black relative">
+        <div class="h-48 sm:h-64 bg-linear-to-r from-gray-800 to-black relative overflow-hidden">
           {#if formData.cover}
-            <img src={formData.cover} alt="Cover" class="w-full h-full object-cover opacity-60" />
+            <img src={formData.cover} alt="Cover" class="w-full h-full object-cover opacity-80" />
+          {:else}
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/bg.jpeg');"></div>
           {/if}
+          <div class="absolute inset-0 bg-black/40"></div>
           {#if isEditing}
             <label class="absolute inset-0 flex items-center justify-center bg-black/40 cursor-pointer hover:bg-black/60 transition-all group">
               <input type="file" accept="image/*" onchange={(e) => handleImageUpload(e, 'cover')} class="hidden" />
@@ -396,4 +412,5 @@
       
     </div>
   {/if}
+  </div>
 </div>

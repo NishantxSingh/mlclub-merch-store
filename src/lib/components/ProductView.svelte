@@ -2,7 +2,6 @@
   import { onDestroy, getContext } from 'svelte';
   import { goto } from '$app/navigation';
 
-  // Define product types
   type Product = {
     id: string;
     name: string;
@@ -13,40 +12,29 @@
     images?: Record<string, string>;
   };
 
-  let { product, isVisible = false }: { product: Product, isVisible?: boolean } = $props();
+  export let product: Product;
+  export let isVisible: boolean = false;
 
-  // Price animation state
-  let isHovered = $state(false);
-  let realPrice = $derived(String(product.price));
-  let hiddenPrice = $derived(realPrice[0] + 'X'.repeat(realPrice.length - 1));
-  let priceDisplay = $state(hiddenPrice);
-  let interval: ReturnType<typeof setInterval>;
+  let isHovered = false;
+  let priceDisplay = '';
+  let interval: ReturnType<typeof setInterval> | null = null;
+  let selectedColor: string | null = null;
 
-  // Selection state
-  let selectedColor = $state(product.colors && product.colors.length > 0 ? product.colors[0] : null);
-  
-  // Derived image: automatically updates when selectedColor changes
-  let currentImage = $derived(
-    selectedColor && product.images && product.images[selectedColor] 
-      ? product.images[selectedColor] 
-      : product.image
-  );
-
-  // Grab the global cart context defined in +layout.svelte
   const cartStore: any = getContext('cartStore');
 
-  $effect(() => {
-    if (product) {
-      priceDisplay = hiddenPrice;
-      // Reset to the first color when navigating to a new product
-      if (product.colors && product.colors.length > 0) {
-        selectedColor = product.colors[0];
-      }
-    }
-  });
+  $: realPrice = product ? String(product.price) : '0';
+  $: hiddenPrice = realPrice ? realPrice[0] + 'X'.repeat(Math.max(0, realPrice.length - 1)) : '0';
+
+  $: if (product) {
+    // Initialize values when product changes
+    priceDisplay = hiddenPrice;
+    selectedColor = product.colors && product.colors.length > 0 ? product.colors[0] : null;
+  }
+
+  $: currentImage = (selectedColor && product?.images && product.images[selectedColor]) ? product.images[selectedColor] : product?.image;
 
   function updatePriceDisplay() {
-    clearInterval(interval);
+    if (interval) clearInterval(interval);
     let step = 0;
     const targetPrice = isHovered ? realPrice : hiddenPrice;
 
@@ -54,21 +42,23 @@
       step++;
       if (step > 6) {
         priceDisplay = targetPrice;
-        clearInterval(interval);
+        if (interval) { clearInterval(interval); interval = null; }
       } else {
-        priceDisplay = realPrice[0] + Array.from({ length: realPrice.length - 1 }, () => Math.floor(Math.random() * 10)).join('');
+        priceDisplay = realPrice[0] + Array.from({ length: Math.max(0, realPrice.length - 1) }, () => Math.floor(Math.random() * 10)).join('');
       }
     }, 40);
   }
 
   function handleAddToCart() {
-    if (cartStore && cartStore.addToCart) {
+    if (cartStore && cartStore.addToCart && product) {
       cartStore.addToCart(product, 'Default', selectedColor || 'Default');
       goto('/checkout');
     }
   }
 
-  onDestroy(() => clearInterval(interval));
+  onDestroy(() => {
+    if (interval) clearInterval(interval);
+  });
 </script>
 
 <div class="w-full min-w-full flex items-center justify-start px-4 md:px-12 lg:px-20 snap-center h-full">
@@ -76,8 +66,8 @@
     
     <div 
       role="presentation"
-      onmouseenter={() => { isHovered = true; updatePriceDisplay(); }}
-      onmouseleave={() => { isHovered = false; updatePriceDisplay(); }}
+      on:mouseenter={() => { isHovered = true; updatePriceDisplay(); }}
+      on:mouseleave={() => { isHovered = false; updatePriceDisplay(); }}
       class="group relative rounded-4xl border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl p-4 md:p-6 shadow-[0_0_40px_rgba(255,107,0,0.05)] transition-all duration-500 hover:border-[#ff6b00]/50 hover:shadow-[0_0_50px_rgba(255,107,0,0.15)]"
     >
       <div class="relative overflow-hidden rounded-4xl border border-gray-800/50 bg-black">
@@ -115,7 +105,7 @@
           <div class="flex flex-wrap gap-4">
             {#each product.colors as color}
               <button 
-                onclick={() => selectedColor = color}
+                on:click={() => selectedColor = color}
                 class={`px-6 py-3 rounded-xl border backdrop-blur-md transition-all text-sm font-mono tracking-wider shadow-lg ${
                   selectedColor === color 
                     ? 'bg-[#ff6b00]/20 text-[#ff6b00] border-[#ff6b00]' 
@@ -130,7 +120,7 @@
       {/if}
 
       <button 
-        onclick={handleAddToCart}
+        on:click={handleAddToCart}
         class="group relative w-full sm:w-auto self-start px-12 py-5 bg-[#ff6b00] hover:bg-[#e57b27] text-black font-extrabold rounded-2xl shadow-[0_0_30px_rgba(255,107,0,0.3)] hover:shadow-[0_0_40px_rgba(255,107,0,0.5)] transition-all transform hover:-translate-y-1 uppercase tracking-widest overflow-hidden flex items-center justify-center"
       >
         <svg class="w-5 h-5 mr-3 relative z-10 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-125" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 21h18L12 2z" /></svg>

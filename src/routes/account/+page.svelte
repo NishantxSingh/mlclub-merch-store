@@ -72,6 +72,10 @@
   // --- Authentication Handlers ---
   const googleProvider = new GoogleAuthProvider();
 
+  // Demo credentials for local testing
+  const DEMO_EMAIL = 'demo+user@test.local';
+  const DEMO_PASSWORD = 'Password123!';
+
   async function handleGoogleLogin() {
     try {
       authError = '';
@@ -101,6 +105,31 @@
       }
     } catch (err: any) {
       authError = err.message || 'Authentication failed.';
+    } finally {
+      isAuthLoading = false;
+    }
+  }
+
+  // Prefill and attempt demo account sign-in (create account if missing)
+  async function handleUseDemo() {
+    authError = '';
+    isAuthLoading = true;
+    authEmail = DEMO_EMAIL;
+    authPassword = DEMO_PASSWORD;
+    try {
+      // Try signing in first
+      await signInWithEmailAndPassword(auth, authEmail, authPassword);
+    } catch (err: any) {
+      // If user not found, create one for local testing
+      if (err?.code === 'auth/user-not-found' || /user-not-found/.test(err?.message || '')) {
+        try {
+          await createUserWithEmailAndPassword(auth, authEmail, authPassword);
+        } catch (createErr: any) {
+          authError = createErr.message || 'Failed to create demo account.';
+        }
+      } else {
+        authError = err.message || 'Demo sign-in failed.';
+      }
     } finally {
       isAuthLoading = false;
     }
@@ -161,7 +190,7 @@
 
   {:else if !currentUser}
     <div class="max-w-md mx-auto relative group mt-10">
-      <div class="absolute -inset-1 bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+      <div class="absolute -inset-1 bg-linear-to-r from-[#ff6b00] to-[#ff8c00] rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
       <div class="relative bg-[#0a0a0a] border border-white/10 backdrop-blur-xl p-8 rounded-3xl shadow-2xl">
         
         <div class="text-center mb-8">
@@ -191,9 +220,9 @@
         </button>
 
         <div class="flex items-center mb-6">
-          <div class="flex-grow h-px bg-gray-800"></div>
+          <div class="grow h-px bg-gray-800"></div>
           <span class="px-4 text-xs text-gray-500 font-mono uppercase">or email</span>
-          <div class="flex-grow h-px bg-gray-800"></div>
+          <div class="grow h-px bg-gray-800"></div>
         </div>
 
         <form onsubmit={handleEmailAuth} class="space-y-4">
@@ -222,7 +251,7 @@
           <button 
             type="submit" 
             disabled={isAuthLoading}
-            class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] text-black font-bold py-3.5 rounded-xl hover:shadow-[0_0_20px_rgba(255,107,0,0.4)] transition-all uppercase tracking-wide disabled:opacity-50 mt-2"
+            class="w-full flex items-center justify-center gap-2 bg-linear-to-r from-[#ff6b00] to-[#ff8c00] text-black font-bold py-3.5 rounded-xl hover:shadow-[0_0_20px_rgba(255,107,0,0.4)] transition-all uppercase tracking-wide disabled:opacity-50 mt-2"
           >
             {#if isAuthLoading}
                Processing...
@@ -248,7 +277,7 @@
   {:else}
     <div class="max-w-4xl mx-auto space-y-8">
       <div class="relative rounded-3xl overflow-hidden bg-gray-900 border border-gray-800">
-        <div class="h-48 sm:h-64 bg-gradient-to-r from-gray-800 to-black relative">
+        <div class="h-48 sm:h-64 bg-linear-to-r from-gray-800 to-black relative">
           {#if formData.cover}
             <img src={formData.cover} alt="Cover" class="w-full h-full object-cover opacity-60" />
           {/if}
@@ -279,7 +308,7 @@
             {/if}
           </div>
           
-          <div class="flex-grow text-center sm:text-left">
+          <div class="grow text-center sm:text-left">
             <h1 class="text-3xl font-black text-white">{formData.name || 'Set Your Name'}</h1>
             <p class="text-[#ff6b00] font-mono text-sm">{currentUser.email}</p>
           </div>
@@ -311,7 +340,7 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="space-y-2">
-            <label class="text-sm font-mono text-gray-500 uppercase">Full Name</label>
+            <div class="text-sm font-mono text-gray-500 uppercase">Full Name</div>
             {#if isEditing}
               <input type="text" bind:value={formData.name} class="w-full bg-black border border-gray-800 rounded-xl p-3 text-white focus:border-[#ff6b00] outline-none" />
             {:else}
@@ -320,7 +349,7 @@
           </div>
 
           <div class="space-y-2">
-            <label class="text-sm font-mono text-gray-500 uppercase">Phone Number</label>
+            <div class="text-sm font-mono text-gray-500 uppercase">Phone Number</div>
             {#if isEditing}
               <input type="tel" bind:value={formData.phone} class="w-full bg-black border border-gray-800 rounded-xl p-3 text-white focus:border-[#ff6b00] outline-none" />
             {:else}

@@ -294,7 +294,7 @@
           {#if formData.cover}
             <img src={formData.cover} alt="Cover" class="w-full h-full object-cover opacity-80" />
           {:else}
-            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/bg.jpeg');"></div>
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/cover.jpg');"></div>
           {/if}
           <div class="absolute inset-0 bg-black/40"></div>
           {#if isEditing}

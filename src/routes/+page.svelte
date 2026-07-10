@@ -17,6 +17,15 @@
     { author: 'Alumni', text: 'Looks great, but I expected a bit more structure in the fabric.', rating: 3, date: '2 months ago' }
   ];
   const reviewItems = [...REVIEWS, ...REVIEWS];
+  const stars = Array.from({ length: 90 }, (_, index) => ({
+    id: index,
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    size: `${Math.random() * 2.4 + 0.6}px`,
+    opacity: `${Math.random() * 0.7 + 0.2}`,
+    duration: `${Math.random() * 2.4 + 2.6}s`,
+    delay: `${Math.random() * 2.8}s`
+  }));
   
   $effect(() => {
     if (scrollContainer) {
@@ -85,7 +94,15 @@
   </style>
 </svelte:head>
 
-<div class="w-full min-h-screen bg-black flex flex-col relative font-sans overflow-hidden">
+<div class="w-full min-h-screen bg-[#030303] flex flex-col relative font-sans overflow-hidden">
+  <div class="pointer-events-none fixed inset-0 overflow-hidden z-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.1),_transparent_55%)]">
+    {#each stars as star}
+      <span
+        class="star absolute rounded-full"
+        style={`left:${star.left}; top:${star.top}; width:${star.size}; height:${star.size}; opacity:${star.opacity}; animation-duration:${star.duration}; animation-delay:${star.delay};`}
+      ></span>
+    {/each}
+  </div>
   
   <div class="relative z-10 w-full pt-16 sm:pt-24 px-4">
     <div class="flex flex-col items-center justify-center text-center mb-12 sm:mb-16">
@@ -138,7 +155,7 @@
 
   </div>
 
-  <div class="relative z-10 w-full px-4 md:px-12 py-16 md:py-24 bg-linear-to-b from-black via-black to-[#0a0a0a]">
+  <div class="relative z-10 w-full px-4 md:px-12 py-16 md:py-24 bg-transparent">
     <div class="max-w-6xl mx-auto">
       <h2 class="text-4xl md:text-5xl font-black text-white mb-12">Customer Reviews</h2>
       
@@ -176,9 +193,26 @@
       animation-play-state: paused;
     }
 
+    .star {
+      background: white;
+      box-shadow: 0 0 10px 2px rgba(255,255,255,0.95);
+      animation: twinkle ease-in-out infinite;
+    }
+
     @keyframes marquee {
       0% { transform: translateX(0%); }
       100% { transform: translateX(-50%); }
+    }
+
+    @keyframes twinkle {
+      0%, 100% {
+        transform: scale(0.75);
+        opacity: 0.18;
+      }
+      50% {
+        transform: scale(1.45);
+        opacity: 1;
+      }
     }
     
     @keyframes shimmer {

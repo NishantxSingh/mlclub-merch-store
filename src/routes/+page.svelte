@@ -9,9 +9,12 @@
   
   const allProducts = PRODUCTS;
   const REVIEWS = [
-    { author: 'Happy Customer', text: 'Premium quality and fantastic design. Absolutely love this product!', rating: 5, date: '2 days ago' },
+    { author: 'Happy Customer', text: 'Premium quality and fantastic design.', rating: 4, date: '2 days ago' },
     { author: 'Merch Fan', text: 'Comfortable fit and the colors pop. Perfect for campus events!', rating: 5, date: '1 week ago' },
-    { author: 'Club Member', text: 'Sleek look, great quality, and delivered quickly. Highly recommend.', rating: 5, date: '3 weeks ago' }
+    { author: 'Club Member', text: 'Sleek look, great quality, and delivered quickly. Highly recommend.', rating: 5, date: '3 weeks ago' },
+    { author: 'Campus Regular', text: 'Great value for the price and the print feels premium.', rating: 5, date: '1 month ago' },
+    { author: 'Event Volunteer', text: 'Solid quality and a nice everyday fit. Less Colour Options!', rating: 4, date: '2 months ago' },
+    { author: 'Alumni', text: 'Looks great, but I expected a bit more structure in the fabric.', rating: 3, date: '2 months ago' }
   ];
   const reviewItems = [...REVIEWS, ...REVIEWS];
   
@@ -148,7 +151,8 @@
                   <Star
                     class="w-4 h-4"
                     fill={starIdx < review.rating ? '#ff6b00' : 'none'}
-                    stroke="#ff6b00"
+                    stroke={starIdx < review.rating ? 'transparent' : 'rgba(255,107,0,0.25)'}
+                    style={`filter: ${starIdx < review.rating ? 'drop-shadow(0 0 6px rgba(255,107,0,0.9))' : 'none'}; opacity: ${starIdx < review.rating ? 1 : 0.35};`}
                   />
                 {/each}
               </div>
@@ -208,7 +212,7 @@
       
       <div class="flex justify-center">
         <p class="text-center text-gray-400 text-xs sm:text-sm max-w-3xl">
-          Copyright © 2025 - All rights reserved by <span class="text-[#ff6b00] font-semibold">Machine Learning Club, NIT Silchar</span>
+          Copyright © 2026 - All rights reserved by <span class="text-[#ff6b00] font-semibold">Machine Learning Club, NIT Silchar</span>
         </p>
       </div>
     </div>

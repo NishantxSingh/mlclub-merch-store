@@ -1,42 +1,22 @@
-# sv
+# 🛒 ML Club Merch Store
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A premium, dark-themed e-commerce UI/UX web application built for the Machine Learning Club, NIT Silchar. This project features a modern "liquid glass" aesthetic, fluid scroll animations, dynamic hovering effects, and a responsive design tailored for tech enthusiasts.
 
-## Creating a project
+## ✨ Features
+* **Modern UI/UX:** Frosted glass components, neon orange (`#ff6b00`) accents, and crisp animations.
+* **Dynamic Product Showcase:** Horizontal snap-scrolling layout with interactive, decrypting price tags on hover.
+* **Shopping Cart State:** Fully functional client-side cart management using Svelte 5 `$state` and Context API.
+* **Responsive Design:** Flawless scaling from mobile screens to ultra-wide desktop monitors.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## 🛠️ Tech Stack
+* **Framework:** [SvelteKit](https://kit.svelte.dev/) (Svelte 5)
+* **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+* **Icons:** [Lucide Svelte](https://lucide.dev/)
+* **Authentication:** Firebase (Implementation in progress)
 
-```sh
-# create a new project
-npx sv create my-app
-```
+## 🔐 Test Credentials
+If you are reviewing this project and want to test the authentication flow, please use the following demo credentials:
 
-To recreate this project with the same configuration:
+* **Email:** `test123@gmail.com`
+* **Password:** `test123`
 
-```sh
-# recreate this project
-npx sv@0.16.1 create --template minimal --types jsdoc --install npm .
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
